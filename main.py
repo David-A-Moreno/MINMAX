@@ -75,7 +75,7 @@ def on_button_click(row, col, matriz, puntaje_jugador, puntaje_ia, casillasFalta
     
     global dificultad
     
-    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas = buscar_numero((row+1, col+1), matriz, casillasFaltantes, 1)
+    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas, actualizacionCasillasIA, actualizacionCasillasJugador = buscar_numero((row+1, col+1), matriz, casillasFaltantes, 1)
     
     puntaje_jugador += puntosObtenidosJugador
     casillasFaltantes = casillas
@@ -90,11 +90,11 @@ def on_button_click(row, col, matriz, puntaje_jugador, puntaje_ia, casillasFalta
     
     nodosTotales.clear()
     nodosTotales = [[] for _ in range(dificultad)]
-    padre = Nodo(matriz,0,dificultad,None,puntaje_ia,puntaje_jugador,None,casillasFaltantes, None,None)
+    padre = Nodo(matriz,0,dificultad,None,0,0,None,casillasFaltantes, None,0,0,None)
     crearArbol(padre, 0, dificultad , nodosTotales)
     movimiento = recorrerArbol(dificultad, nodosTotales)
     
-    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas = buscar_numero(movimiento, matriz, casillasFaltantes, 0)
+    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas, actualizacionCasillasIA, actualizacionCasillasJugador = buscar_numero(movimiento, matriz, casillasFaltantes, 0)
     
     puntaje_ia += puntosObtenidosIA
     casillasFaltantes = casillas
@@ -175,11 +175,11 @@ def startGame(dificultadSeleccionada, matriz, puntaje_jugador, puntaje_ia, casil
     dificultad = dificultadSeleccionada
     
     nodosTotales = [[] for _ in range(dificultadSeleccionada)]
-    padre = Nodo(matriz,0,dificultadSeleccionada,None,puntaje_ia,puntaje_jugador,None,casillasFaltantes, None,None)
+    padre = Nodo(matriz,0,dificultadSeleccionada,None,0,0,None,casillasFaltantes, None,0,0,None)
     crearArbol(padre, 0, dificultadSeleccionada, nodosTotales)
     movimiento = recorrerArbol(dificultadSeleccionada, nodosTotales)
     
-    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas = buscar_numero(movimiento, matriz, casillasFaltantes, 0)
+    puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas, actualizacionCasillasIA, actualizacionCasillasJugador = buscar_numero(movimiento, matriz, casillasFaltantes, 0)
     
     
     puntaje_ia += puntosObtenidosIA

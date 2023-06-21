@@ -19,16 +19,20 @@ def buscar_numero(coordenadas, matriz, casillasPuntos, turno):
     x, y = coordenadas
     numero = matriz_aux[x-1][y-1]
     valor = int(numero)
+    casillasCogidasIa = 0
+    casillasCogidasJugador = 0
     if 1 <= valor <= 7:
         if (turno == 0):
             puntosObtenidosIA += valor
             actualizacionCasillas -= 1
+            casillasCogidasIa += 1
             ubicacion = ubicarElemento(matriz, '10')
             matriz_aux[ubicacion[0]-1][ubicacion[1]-1] = '0'
             matriz_aux[x-1][y-1] = '10'
         else:
             puntosObtenidosJugador += valor
             actualizacionCasillas -= 1
+            casillasCogidasJugador += 1
             ubicacion = ubicarElemento(matriz, '9')
             matriz_aux[ubicacion[0]-1][ubicacion[1]-1] = '0'
             matriz_aux[x-1][y-1] = '9'
@@ -41,7 +45,7 @@ def buscar_numero(coordenadas, matriz, casillasPuntos, turno):
             ubicacion = ubicarElemento(matriz, '9')
             matriz_aux[ubicacion[0]-1][ubicacion[1]-1] = '0'
             matriz_aux[x-1][y-1] = '9'
-    return puntosObtenidosIA, puntosObtenidosJugador, matriz_aux, actualizacionCasillas
+    return puntosObtenidosIA, puntosObtenidosJugador, matriz_aux, actualizacionCasillas, casillasCogidasIa, casillasCogidasJugador
 
 def movimientosPosibles(turno, estado):
     
@@ -90,7 +94,7 @@ def crearArbol (nodo, turno, profundidadFinal, listaNodos):
             
             #se hace el movimiento y se cuentan los puntos obtenidos para el turno correspondiente
             
-            puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas = buscar_numero(movimiento, matriz_aux, nodo.get_casillas_puntos(), turno)
+            puntosObtenidosIA, puntosObtenidosJugador, matriz_modificada, casillas, actualizacionCasillasIA, actualizacionCasillasJugador = buscar_numero(movimiento, matriz_aux, nodo.get_casillas_puntos(), turno)
             
             movimientosAcumuladosIa += puntosObtenidosIA
             movimientosAcumuladosJugador += puntosObtenidosJugador
@@ -101,7 +105,7 @@ def crearArbol (nodo, turno, profundidadFinal, listaNodos):
                 proximoTurno = 0
                 
             #se crea el hijo con los nuevos datos obtenidos
-            hijo = Nodo(matriz_modificada, nodo.get_profundidad() +1, profundidadFinal, nodo, movimientosAcumuladosIa, movimientosAcumuladosJugador,movimiento, casillas, turno, None)
+            hijo = Nodo(matriz_modificada, nodo.get_profundidad() +1, profundidadFinal, nodo, movimientosAcumuladosIa, movimientosAcumuladosJugador,movimiento, casillas, turno, actualizacionCasillasIA, actualizacionCasillasJugador, None)
             
             #si se llega a la profundida se calcula el valor de la heuristica
             if (hijo.get_profundidad() == profundidadFinal):
@@ -144,4 +148,5 @@ def recorrerArbol(profundidad, arrayNodos):
         else: #si se llega a la profundidad final, se asigna el max al nodo padre
             movimientoEscogido = max(arrayNodos[0], key=lambda hijo: hijo.get_resultado()).get_movimiento()
             
-    return movimientoEscogido 
+    return movimientoEscogido
+

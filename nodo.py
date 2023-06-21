@@ -1,6 +1,6 @@
 class Nodo:
     
-    def __init__(self, estado, profundidad, profundidadObjetivo, padre, puntosAcumuladosIa, puntosAcumuladosJugador, movimiento, casillasPuntos, turno, resultado=None):
+    def __init__(self, estado, profundidad, profundidadObjetivo, padre, puntosAcumuladosIa, puntosAcumuladosJugador, movimiento, casillasPuntos, turno, casillasObtenidasIA, casillasObtenidasJugador, resultado):
         self.estado = estado
         self.profundidad = profundidad
         self.profundidadObjetivo = profundidadObjetivo
@@ -10,6 +10,8 @@ class Nodo:
         self.movimiento = movimiento
         self.casillasPuntos = casillasPuntos
         self.turno = turno
+        self.casillasObtenidasIA = casillasObtenidasIA
+        self.casillasObtenidasJugador = casillasObtenidasJugador
         self.resultado = resultado
     
     def get_padre(self):
@@ -38,13 +40,13 @@ class Nodo:
         
     def resultadoHeuristica(self):
         resultado = 0
-        if (self.puntosAcumuladosIa > self.puntosAcumuladosJugador and self.casillasPuntos == 0):
+        if (self.puntosAcumuladosIa > self.puntosAcumuladosJugador and self.casillasPuntos == 0 and self.casillasObtenidasIA > self.casillasObtenidasJugador):
             resultado = float('inf')
             
-        elif (self.puntosAcumuladosIa < self.puntosAcumuladosJugador and self.casillasPuntos == 0):
+        elif (self.puntosAcumuladosIa < self.puntosAcumuladosJugador and self.casillasPuntos == 0 and self.casillasObtenidasIA < self.casillasObtenidasJugador):
             resultado = float('-inf')
         else:
-            resultado = self.puntosAcumuladosIa - self.puntosAcumuladosJugador
+            resultado = (self.puntosAcumuladosIa + self.casillasObtenidasIA) - (self.puntosAcumuladosJugador + self.casillasObtenidasJugador)
             
         self.resultado = resultado
     
@@ -53,3 +55,17 @@ class Nodo:
         
     def get_resultado(self):
         return self.resultado
+    
+def encontrar_posicion_mayor(coordenadas, matriz):
+    numeros = ['1', '2', '3', '4', '5', '6', '7']
+    maximo = float('-inf')  # Inicializar con un valor muy bajo
+
+    for coord in coordenadas:
+        fila, columna = coord
+        elemento = matriz[fila-1][columna-1]
+        if elemento in numeros:
+            numero = int(elemento)
+            if numero > maximo:
+                maximo = numero
+                
+    return maximo
